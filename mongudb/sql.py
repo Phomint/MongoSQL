@@ -51,3 +51,30 @@ class Mongo():
     def insert(self, object: dict):
         self.__document = object
         return self
+
+
+class Transaction(Mongo):
+    def __init__(self, database: str, url: str):
+        super().__init__(database, url)
+        self.__structure = {}
+        self.__methods = {'select': self.select,
+                          'from': self.from_,
+                          'where': self.where,
+                          'and': self.and_}
+
+    def query(self, structure):
+        structure = structure.lower()
+        syntax = ['select', 'from', 'where', 'and']
+        has = [s for s in syntax if s in structure]
+        for h in has:
+                structure = structure.replace(h, '|')
+        structure = structure.split('|')[1:]
+
+        for n, k in enumerate(has):
+            self.__structure[k] = structure[n].replace(' ', '').split(',') if structure[n].__contains__(',') else structure[n].replace(' ', '')
+        return self
+
+    def run(self):
+        for k, v in self.__structure.items():
+            self.__methods[k](v)
+        return self

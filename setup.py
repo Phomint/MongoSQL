@@ -27,6 +27,7 @@ setuptools.setup(
     license='GPLv3',
     keywords=['databases', 'mongodb', 'query', 'sql'],
     install_requires=[
-        "pymongo"
+        "pymongo",
+        "dnspython"
     ],
 )
